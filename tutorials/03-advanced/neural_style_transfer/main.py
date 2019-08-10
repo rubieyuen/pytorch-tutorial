@@ -32,7 +32,7 @@ def load_image(image_path, transform=None, max_size=None, shape=None):
 
 class VGGNet(nn.Module):
     def __init__(self):
-        """Select conv1_1 ~ conv5_1 activation maps."""
+        """Select conv1_1 ~ conv5_1 activation maps."""# 选择conv_1到conv_5的激活图
         super(VGGNet, self).__init__()
         self.select = ['0', '5', '10', '19', '28'] 
         self.vgg = models.vgg19(pretrained=True).features
@@ -70,7 +70,7 @@ def main(config):
     
     for step in range(config.total_step):
         
-        # Extract multiple(5) conv feature vectors
+        # Extract multiple(5) conv feature vectors,提取多层特征向量
         target_features = vgg(target)
         content_features = vgg(content)
         style_features = vgg(style)
@@ -78,22 +78,22 @@ def main(config):
         style_loss = 0
         content_loss = 0
         for f1, f2, f3 in zip(target_features, content_features, style_features):
-            # Compute content loss with target and content images
+            # Compute content loss with target and content images，计算content损失，target-content
             content_loss += torch.mean((f1 - f2)**2)
 
-            # Reshape convolutional feature maps
+            # Reshape convolutional feature maps,卷积特征图
             _, c, h, w = f1.size()
             f1 = f1.view(c, h * w)
             f3 = f3.view(c, h * w)
 
-            # Compute gram matrix
+            # Compute gram matrix计算格拉姆矩阵
             f1 = torch.mm(f1, f1.t())
             f3 = torch.mm(f3, f3.t())
 
-            # Compute style loss with target and style images
+            # Compute style loss with target and style images计算style的损失，target-style
             style_loss += torch.mean((f1 - f3)**2) / (c * h * w) 
         
-        # Compute total loss, backprop and optimize
+        # Compute total loss, backprop and optimize,计算全部损失，并进行反向传播和优化
         loss = content_loss + config.style_weight * style_loss 
         optimizer.zero_grad()
         loss.backward()
