@@ -67,7 +67,7 @@ g_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002)
 
 def denorm(x):
     out = (x + 1) / 2
-    return out.clamp(0, 1)
+    return out.clamp(0, 1)'''clamp(A,B)返回的value介于A、B之间，若value小于min，返回min，若大于max，返回max'''
 
 def reset_grad():
     d_optimizer.zero_grad()
