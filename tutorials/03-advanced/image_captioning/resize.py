@@ -4,7 +4,13 @@ from PIL import Image
 
 
 def resize_image(image, size):
-    """Resize an image to the given size."""
+    """Resize an image to the given size.
+    Image.NEAREST 低质量
+Image.BILINEAR 双线性
+Image.BICUBIC 三次样条插值
+Image.ANTIALIAS 高质量
+    
+    """
     return image.resize(size, Image.ANTIALIAS)
 
 def resize_images(image_dir, output_dir, size):
